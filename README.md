@@ -1,4 +1,4 @@
-# Cognito Cli
+# Cognito Cli passwordless login
 A cli to interact with your cognito user pool, create accounts, login, verify phone number, verify email, etc.
 
 ## Installation
@@ -6,13 +6,13 @@ A cli to interact with your cognito user pool, create accounts, login, verify ph
 Install using yarn
 
 ```
-yarn global add aws-cognito-cli
+yarn global add cognito-passwordless-cli
 ```
 
 Install using npm
 
 ```
-npm install -g aws-cognito-cli
+npm i -g cognito-passwordless-cli
 ```
 ## Documentation
 
@@ -30,11 +30,8 @@ cognito-cli --help
 
     Create the config that will be used to perform various cognito functions
 
-    Example
-    cognito-cli createConfig --region=us-east-1 --givenName=mac \
-        --lastName=mac --userPoolId=123 --userPoolWebClientId=123 \
-        --mfaEnabled=true --email=mac@wednesday.is --password=123 \
-        --phoneNumber=+10101001 --emailVerified=true --phoneVerified=false
+    Config 
+    cognito-cli createConfig --region=us-east-1  --userPoolId=123 --userPoolWebClientId=123 --email=numberPhone
 
 #### getConfig
 
@@ -53,42 +50,3 @@ cognito-cli --help
     
     Example
     cognito-cli signin
-
-#### signup
-
-    Use the current config to create a new user
-    
-    Example
-    cognito-cli signup
-    
-    
-#### verifyEmail
-
-    Verify the email in the config. 
-    
-    Example
-    cognito-cli verifyEmail
-
-    
-    
-#### verifyPhone
-
-    Verify the phone in the config. 
-    
-    Example
-    cognito-cli verifyPhone
-    
-    
-#### forceVerify
-
-    Force verify email, phone number attributes in cognito 
-    
-    Example
-    cognito-cli forceVerify
-
-#### enableMFA
-
-    Enable MFA for the user.  
-    
-    Example
-    cognito-cli enableMFA
