@@ -1,6 +1,6 @@
 {
-  "name": "aws-cognito-cli",
-  "version": "1.0.9",
+  "name": "cognito-passwordless-cli",
+  "version": "1.0.0",
   "type": "module",
   "description": "A cli to interact with your cognito user pool, create accounts, force verify, login, verify phone number, verify email, etc.",
   "repository": {
@@ -83,5 +83,10 @@
     "eslint-plugin-prettier": "3.0.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/wednesday-solutions/cognito-cli/issues"
+  },
+  "homepage": "https://github.com/wednesday-solutions/cognito-cli#readme",
+  "main": "index.js"
 }

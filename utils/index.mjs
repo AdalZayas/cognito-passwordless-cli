@@ -3,15 +3,13 @@ import path, { dirname } from 'path';
 import shell from 'shelljs';
 import fs from 'fs';
 import AWS from 'aws-sdk';
-import AmplifySDK from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import nodeFetch from 'node-fetch';
 import { fileURLToPath } from 'url';
 import _ from 'lodash';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 global.fetch = nodeFetch.default;
-
-const Amplify = AmplifySDK.default;
 
 let config = {};
 const configPath = path.resolve(__dirname, '../config.json');
@@ -102,7 +100,6 @@ export function signUp(args) {
   getAuth()
     .signUp({
       username: config.email,
-      password: config.password,
       attributes: {
         email: config.email,
       },
@@ -119,21 +116,33 @@ export function signUp(args) {
     });
 }
 
+async function isAuthenticated() {
+  try {
+    await Auth.currentSession();
+    return true;
+  } catch {
+    return false;
+  }
+}
 export function signIn(args) {
-  return getAuth()
-    .signIn(config.email, config.password)
-    .then(user => {
-      user.getSession((error, data) => {
-        if (!error) {
-          console.log(JSON.stringify(data, null, 2));
-        } else {
-          console.log(error);
-        }
-      });
-      return user;
+
+  getAuth()
+    .signIn(config.email)
+    .then(async user => {
+      const OTP = await askQuestion('Please enter the email OTP\n');
+      await Auth.sendCustomChallengeAnswer(user, OTP)
+      return isAuthenticated();
     })
-    .catch(err => {
-      console.log({ err });
+    .then(async isAuthenticated => {
+      if (isAuthenticated) {
+        let user = await Auth.currentAuthenticatedUser();
+        console.log(user.signInUserSession.accessToken.jwtToken);
+      } else {
+        console.log('User is not authenticated');
+      }
+    })
+    .catch(e => {
+      console.log({ e });
     });
 }
 
