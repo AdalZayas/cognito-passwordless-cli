@@ -27,9 +27,16 @@ const handleCli = cliArgs => {
   const strippedArgs = _.drop(cliArgs);
   createConfig(strippedArgs, true);
   switch (cliArgs[0]) {
-    case 'signin':
-      signIn(strippedArgs);
+    case 'signin': {
+      let phoneNumber;
+      if (cliArgs.includes('-p') || cliArgs.includes('--phone')) {
+        const phoneIndex = cliArgs.indexOf('-p') || cliArgs.indexOf('--phone');
+        phoneNumber = cliArgs[phoneIndex + 1];
+        strippedArgs.splice(phoneIndex, 2); // Remove flag and phone number from arguments
+      }
+      signIn(strippedArgs, phoneNumber);
       break;
+    }
     case 'signup':
       signUp(strippedArgs);
       break;
@@ -54,21 +61,21 @@ const handleCli = cliArgs => {
     case '--help':
       shell.echo(
         `\ncreateConfig` +
-        `Create the config that will be used to perform various cognito functions\n\n` +
-        `getConfig` +
-        `Get the current configuration that will be used to perform various cognito functions\n\n` +
-        `signin` +
-        `Use the current config to sign in and get tokens\n\n` +
-        `signup` +
-        `Use the current config to create a new user\n\n` +
-        `verifyEmail` +
-        `Verify the email in the config.\n\n` +
-        `verifyPhone` +
-        `Verify the phone in the config. \n\n` +
-        `forceVerify` +
-        `Force verify email, phone number attributes in cognito \n\n` +
-        `enableMFA` +
-        `Enable MFA for the user.`,
+          `Create the config that will be used to perform various cognito functions\n\n` +
+          `getConfig` +
+          `Get the current configuration that will be used to perform various cognito functions\n\n` +
+          `signin` +
+          `Use the current config to sign in and get tokens\n\n` +
+          `signup` +
+          `Use the current config to create a new user\n\n` +
+          `verifyEmail` +
+          `Verify the email in the config.\n\n` +
+          `verifyPhone` +
+          `Verify the phone in the config. \n\n` +
+          `forceVerify` +
+          `Force verify email, phone number attributes in cognito \n\n` +
+          `enableMFA` +
+          `Enable MFA for the user.`,
       );
       break;
     default:

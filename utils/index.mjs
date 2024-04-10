@@ -6,7 +6,6 @@ import AWS from 'aws-sdk';
 import { Amplify, Auth } from 'aws-amplify';
 import nodeFetch from 'node-fetch';
 import { fileURLToPath } from 'url';
-import _ from 'lodash';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 global.fetch = nodeFetch.default;
@@ -124,18 +123,20 @@ async function isAuthenticated() {
     return false;
   }
 }
-export function signIn(args) {
-
+export function signIn(args, phone) {
+  if (phone) {
+    config.email = phone;
+  }
   getAuth()
     .signIn(config.email)
     .then(async user => {
       const OTP = await askQuestion('Please enter the email OTP\n');
-      await Auth.sendCustomChallengeAnswer(user, OTP)
+      await Auth.sendCustomChallengeAnswer(user, OTP);
       return isAuthenticated();
     })
     .then(async isAuthenticated => {
       if (isAuthenticated) {
-        let user = await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentAuthenticatedUser();
         console.log(user.signInUserSession.accessToken.jwtToken);
       } else {
         console.log('User is not authenticated');
